@@ -42,8 +42,7 @@
     "src": "src"
   },
   "dependencies": {
-    "debug": "^3.1.0",
-    "lodash": "^4.17.15"
+    "debug": "^3.1.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
