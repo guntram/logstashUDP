@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const debug = require('debug')('log4js:logstashUDP');
 const os = require('os');
 const dgram = require('dgram');
@@ -26,7 +25,7 @@ const defaultVersion = 1;
 const defaultExtraDataProvider = loggingEvent => {
   if (loggingEvent.data.length > 1) {
     const secondEvData = loggingEvent.data[1];
-    if (_.isPlainObject(secondEvData)) {
+    if (secondEvData && typeof secondEvData === 'object') {
       return {fields: secondEvData};
     }
   }
@@ -35,7 +34,7 @@ const defaultExtraDataProvider = loggingEvent => {
 
 function logstashUDP(config, layout, logError) {
   const udp = dgram.createSocket('udp4');
-  const extraDataProvider = _.isFunction(config.extraDataProvider)
+  const extraDataProvider = config.extraDataProvider && typeof config.extraDataProvider === 'function'
     ? config.extraDataProvider
     : defaultExtraDataProvider;
 
@@ -49,7 +48,7 @@ function logstashUDP(config, layout, logError) {
       'message': layout(loggingEvent)
     };
     const extraLogObject = extraDataProvider(loggingEvent) || {};
-    const logObject = _.assign(oriLogObject, extraLogObject);
+    const logObject = Object.assign(oriLogObject, extraLogObject);
 
     sendLog(udp, config.host, config.port, logObject, logError);
   }
